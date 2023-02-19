@@ -182,7 +182,7 @@ class StaticInstrumentInfo:
     full_name: str
     instrument_id: str
     ins_code: str
-    type: MarketType
+    type: MarketType | None
     min_week: int
     max_week: int
     min_year: int
