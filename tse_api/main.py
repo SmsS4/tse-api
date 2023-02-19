@@ -1,11 +1,10 @@
 import time
 from concurrent.futures import ThreadPoolExecutor
-from pprint import pprint
 
 from glogger.logger import get_logger
 from tse_api.api import TseApi
 
-logger = get_logger('test')
+logger = get_logger("test")
 
 
 def worker(tse, code):
@@ -16,7 +15,9 @@ def worker(tse, code):
 def main():
     tse = TseApi()
     code = 55924039170758349
-    logger.info(tse.get_static_data(code))  # to avoid getting static data for each worker
+    logger.info(
+        tse.get_static_data(code)
+    )  # to avoid getting static data for each worker
     # pprint(tse.get_live_data(code))
 
     current = time.time()
@@ -29,5 +30,5 @@ def main():
     logger.info("time: %s", (time.time() - current))
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

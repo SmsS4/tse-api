@@ -15,7 +15,7 @@ def defensive(print_fn: callable = print) -> callable:
     def decorator(func: callable) -> callable:
         @functools.wraps(func)
         def wrapped(  # pylint:disable=inconsistent-return-statements
-                *args, **kwargs
+            *args, **kwargs
         ) -> Any:
             try:
                 return func(*args, **kwargs)

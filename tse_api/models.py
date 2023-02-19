@@ -4,7 +4,8 @@ import enum
 import queue
 import time
 from queue import Empty
-from typing import List, Optional
+from typing import List
+from typing import Optional
 
 # TODO: remove __slots__ and use slots=True in `dataclasses.dataclass`
 @dataclasses.dataclass
@@ -12,20 +13,23 @@ class BestLimit:
     """
     Order book
     """
+
     __slots__ = (
-        'price',
-        'vol',
-        'count',
+        "price",
+        "vol",
+        "count",
     )
     price: int
     vol: int
     count: int
-    def __eq__(self, other: 'BestLimit'):
+
+    def __eq__(self, other: "BestLimit"):
         return (
-            self.price == other.price and
-            self.vol == other.vol and
-            self.count == other.count
+            self.price == other.price
+            and self.vol == other.vol
+            and self.count == other.count
         )
+
 
 @dataclasses.dataclass
 class RealLegal:
@@ -38,11 +42,12 @@ class RealLegal:
         legal_vol: حجم حقوقی
         legal_count: تعداد حقوقی
     """
+
     __slots__ = (
-        'real_vol',
-        'real_count',
-        'legal_vol',
-        'legal_count',
+        "real_vol",
+        "real_count",
+        "legal_vol",
+        "legal_count",
     )
     real_vol: int
     real_count: int
@@ -51,19 +56,21 @@ class RealLegal:
 
     def __eq__(self, other):
         return (
-                self.real_vol == other.real_vol
-                and self.real_count == other.real_count
-                and self.legal_vol == other.legal_vol
-                and self.legal_count == other.legal_count
+            self.real_vol == other.real_vol
+            and self.real_count == other.real_count
+            and self.legal_vol == other.legal_vol
+            and self.legal_count == other.legal_count
         )
 
     def __str__(self):
-        return "\t".join([
-            f"real_vol: {self.real_vol}",
-            f"real_count: {self.real_count}",
-            f"legal_vol: {self.legal_vol}",
-            f"legal_count: {self.legal_count}",
-        ])
+        return "\t".join(
+            [
+                f"real_vol: {self.real_vol}",
+                f"real_count: {self.real_count}",
+                f"legal_vol: {self.legal_vol}",
+                f"legal_count: {self.legal_count}",
+            ]
+        )
 
 
 class MarketType(enum.Enum):
@@ -151,32 +158,33 @@ class StaticInstrumentInfo:
         date: date of data (YYYY/MM/DD format) (use datetime_to_date)
 
     """
+
     __slots__ = (
-        'name',
-        'full_name',
-        'instrument_id',
-        'ins_code',
-        'type',
-        'min_week',
-        'max_week',
-        'min_year',
-        'max_year',
-        'base_vol',
-        'low_threshold',
-        'high_threshold',
-        'nav',
-        'sector_pe',
-        'number_of_shares',
-        'month_average_vol',
-        'industry_sector_code',
-        'industry_sector_name',
-        'industry_subsector_code',
-        'industry_subsector_name',
-        'instrument_group_code',
-        'yesterday_final',
-        'index_coefficient',
-        'flow',
-        'date',
+        "name",
+        "full_name",
+        "instrument_id",
+        "ins_code",
+        "type",
+        "min_week",
+        "max_week",
+        "min_year",
+        "max_year",
+        "base_vol",
+        "low_threshold",
+        "high_threshold",
+        "nav",
+        "sector_pe",
+        "number_of_shares",
+        "month_average_vol",
+        "industry_sector_code",
+        "industry_sector_name",
+        "industry_subsector_code",
+        "industry_subsector_name",
+        "instrument_group_code",
+        "yesterday_final",
+        "index_coefficient",
+        "flow",
+        "date",
     )
     name: str
     full_name: str
@@ -209,7 +217,6 @@ class StaticInstrumentInfo:
         Clone
         """
         return StaticInstrumentInfo(
-
             name=self.name,
             full_name=self.full_name,
             instrument_id=self.instrument_id,
@@ -239,7 +246,7 @@ class StaticInstrumentInfo:
 
     @staticmethod
     def datetime_to_date(  # pylint:disable=missing-function-docstring
-            dt: datetime.datetime,
+        dt: datetime.datetime,
     ) -> str:
         return dt.strftime("%Y/%m/%d")
 
@@ -283,16 +290,22 @@ class Instrument:
             market_value=self.market_value,
             lowest_price=self.lowest_price,
             highest_price=self.highest_price,
-            buy_best_limit=[BestLimit(
-                price=bl.price,
-                vol=bl.vol,
-                count=bl.count,
-            ) for bl in self.buy_best_limit],
-            sell_best_limit=[BestLimit(
-                price=bl.price,
-                vol=bl.vol,
-                count=bl.count,
-            ) for bl in self.sell_best_limit],
+            buy_best_limit=[
+                BestLimit(
+                    price=bl.price,
+                    vol=bl.vol,
+                    count=bl.count,
+                )
+                for bl in self.buy_best_limit
+            ],
+            sell_best_limit=[
+                BestLimit(
+                    price=bl.price,
+                    vol=bl.vol,
+                    count=bl.count,
+                )
+                for bl in self.sell_best_limit
+            ],
             buy_reallegal=RealLegal(
                 real_vol=self.buy_reallegal.real_vol,
                 real_count=self.buy_reallegal.real_count,
@@ -311,16 +324,16 @@ class Instrument:
 
     def __eq__(self, other: "Instrument") -> bool:  # pylint:disable=too-many-branches
         if (
-                self.state != other.state or
-                self.last != other.last or
-                self.final != other.final or
-                self.trades_value != other.trades_value or
-                self.trades_count != other.trades_count or
-                self.trades_vol != other.trades_vol or
-                self.market_value != other.market_value or
-                self.lowest_price != other.lowest_price or
-                self.highest_price != other.highest_price or
-                self.last_trade_date != other.last_trade_date
+            self.state != other.state
+            or self.last != other.last
+            or self.final != other.final
+            or self.trades_value != other.trades_value
+            or self.trades_count != other.trades_count
+            or self.trades_vol != other.trades_vol
+            or self.market_value != other.market_value
+            or self.lowest_price != other.lowest_price
+            or self.highest_price != other.highest_price
+            or self.last_trade_date != other.last_trade_date
         ):
             return False
         if len(self.buy_best_limit) != len(other.buy_best_limit):
@@ -385,7 +398,7 @@ class Instrument:
         )
 
     def get_power(  # pylint:disable=too-many-return-statements
-            self, buy: bool = True
+        self, buy: bool = True
     ) -> float:
         """
         Gets buy/sell real power of instrument
@@ -399,7 +412,7 @@ class Instrument:
         if self.buy_reallegal.real_vol == 0:
             return 0
         result = (self.buy_reallegal.real_vol / self.buy_reallegal.real_count) / (
-                self.sell_reallegal.real_vol / self.sell_reallegal.real_count
+            self.sell_reallegal.real_vol / self.sell_reallegal.real_count
         )
         if buy:
             return result
@@ -420,22 +433,22 @@ class Instrument:
         return (self.final * reallegal.real_vol) // reallegal.real_count
 
     __slots__ = (
-        'static_data',
-        'state',
-        'last',
-        'final',
-        'trades_value',
-        'trades_count',
-        'trades_vol',
-        'market_value',
-        'lowest_price',
-        'highest_price',
-        'buy_best_limit',
-        'sell_best_limit',
-        'buy_reallegal',
-        'sell_reallegal',
-        'last_trade_date',
-        'create_date',
+        "static_data",
+        "state",
+        "last",
+        "final",
+        "trades_value",
+        "trades_count",
+        "trades_vol",
+        "market_value",
+        "lowest_price",
+        "highest_price",
+        "buy_best_limit",
+        "sell_best_limit",
+        "buy_reallegal",
+        "sell_reallegal",
+        "last_trade_date",
+        "create_date",
     )
     static_data: StaticInstrumentInfo
     state: State
@@ -496,8 +509,9 @@ class Observer:
         if key not in self.__static:
             self.__static[key] = instrument.static_data
         if (
-                self.__static[key].low_threshold == instrument.static_data.low_threshold
-                and self.__static[key].high_threshold == instrument.static_data.high_threshold
+            self.__static[key].low_threshold == instrument.static_data.low_threshold
+            and self.__static[key].high_threshold
+            == instrument.static_data.high_threshold
         ):
             instrument.static_data = self.__static[key]
         else:
@@ -516,14 +530,15 @@ class InstrumentInfo:
     """
     Basic instrument info
     """
+
     __slots__ = (
-        'name',
-        'instrument_id',
-        'ins_code',
-        'type',
-        'group_id',
-        'group_name',
-        'currency',
+        "name",
+        "instrument_id",
+        "ins_code",
+        "type",
+        "group_id",
+        "group_name",
+        "currency",
     )
     name: str
     instrument_id: str
@@ -537,12 +552,12 @@ class InstrumentInfo:
 @dataclasses.dataclass
 class DetailForOrder:
     __slots__ = (
-        'state',
-        'threshold_low',
-        'threshold_high',
-        'buy_lot',
-        'sell_lot',
-        'asset',
+        "state",
+        "threshold_low",
+        "threshold_high",
+        "buy_lot",
+        "sell_lot",
+        "asset",
     )
     state: State
     threshold_low: int
