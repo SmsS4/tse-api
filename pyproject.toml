@@ -5,7 +5,7 @@ description = ""
 authors = ["SmsS4 <smss.lite@gmail.com>"]
 
 [tool.poetry.dependencies]
-python = "^3.8"
+python = "^3.10"
 glogger = "^1.1.0"
 
 [tool.poetry.dev-dependencies]
