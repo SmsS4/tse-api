@@ -1,11 +1,14 @@
 import datetime
 import re
 import time
-from typing import Tuple, List, Optional, Dict
+from typing import Dict
+from typing import List
+from typing import Optional
+from typing import Tuple
 
 import requests
-from glogger.logger import get_logger
 
+from glogger.logger import get_logger
 from tse_api import models
 from tse_api.defensive import defensive
 
@@ -18,17 +21,18 @@ class TseApi:
     """
     Tse API
     """
+
     # TODO: refactor
 
     __logger = get_logger("TseApi")
 
     def __init__(
-            self,
-            request_timeout: float = 4,
-            sleep_tse_errors: float = 5,
-            sleep_timeout: float = 1,
-            sleep_connection_error: float = 0.1,
-            sleep_non_200: float = 1,
+        self,
+        request_timeout: float = 4,
+        sleep_tse_errors: float = 5,
+        sleep_timeout: float = 1,
+        sleep_connection_error: float = 0.1,
+        sleep_non_200: float = 1,
     ):
         self.__logger.info("TseApi Init")
         self._static_instrument_data: Dict[str | int, models.StaticInstrumentInfo] = {}
@@ -45,9 +49,7 @@ class TseApi:
         while True:
             try:
                 response = requests.get(
-                    url,
-                    params=params,
-                    timeout=self.request_timeout
+                    url, params=params, timeout=self.request_timeout
                 )
                 result = response.text
                 if response.status_code != 200:
@@ -56,9 +58,9 @@ class TseApi:
                     time.sleep(self.sleep_non_200)
                     continue
                 if (
-                        "Too Many Requests" in result
-                        or "The service is unavailable" in result
-                        or "Error" in result
+                    "Too Many Requests" in result
+                    or "The service is unavailable" in result
+                    or "Error" in result
                 ):
                     self.__logger.warning(url)
                     self.__logger.warning(result)
@@ -72,7 +74,9 @@ class TseApi:
                 self.__logger.warning("Connection error")
                 time.sleep(self.sleep_connection_error)
 
-    def get_static_data_retry(self, ins_code: str | int, retry_number: int) -> models.StaticInstrumentInfo:
+    def get_static_data_retry(
+        self, ins_code: str | int, retry_number: int
+    ) -> models.StaticInstrumentInfo:
         """
         Trying to get static data
         """
@@ -86,8 +90,7 @@ class TseApi:
                 time.sleep(0.1)
 
     def get_static_data(  # pylint:disable=too-many-locals, too-many-statements
-            self,
-            ins_code: str | int
+        self, ins_code: str | int
     ) -> models.StaticInstrumentInfo:
         """
         Gets static instrument info (see `models.StaticInstrumentInfo`)
@@ -205,8 +208,10 @@ class TseApi:
         return result
 
     def __get_best_limits(
-            self, all_data: list
-    ) -> Tuple[List[models.BestLimit], List[models.BestLimit]]:  # pylint:disable=too-many-locals
+        self, all_data: list
+    ) -> Tuple[
+        List[models.BestLimit], List[models.BestLimit]
+    ]:  # pylint:disable=too-many-locals
         """
         Gets best limits from data
         """
@@ -247,7 +252,7 @@ class TseApi:
         return buy_best_limits, sell_best_limits
 
     def __get_reallegal(
-            self, all_data: list
+        self, all_data: list
     ) -> Tuple[Optional[models.RealLegal], Optional[models.RealLegal]]:
         """
         Gets reallegal from data
@@ -306,7 +311,7 @@ class TseApi:
 
     @defensive()
     def get_live_data(  # pylint:disable=too-many-locals
-            self, ins_code: str | int
+        self, ins_code: str | int
     ) -> models.Instrument | None:
         """
         Gets data that changes during day
@@ -384,5 +389,3 @@ class TseApi:
             last_trade_date=last_trade_date,
             create_date=datetime.datetime.now(),
         )
-
-
